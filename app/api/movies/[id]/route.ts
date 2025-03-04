@@ -1,4 +1,3 @@
-// app/api/movies/[id]/route.ts
 import { NextResponse } from 'next/server';
 
 const API_KEY = process.env.API_KEY;
@@ -6,9 +5,11 @@ const API_URL_MOVIE = 'https://api.themoviedb.org/3/movie';
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> } // Change to Promise
 ) {
-  
+  // Resolve the params promise
+  const params = await context.params;
+
   if (!API_KEY) {
     console.error('API Route: Missing API key');
     return NextResponse.json(
