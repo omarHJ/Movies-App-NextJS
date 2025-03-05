@@ -35,6 +35,7 @@ interface Movie {
   id: number;
   title: string;
   poster_path: string;
+  backdrop_path: string;
   release_date: string;
   vote_average: number;
   overview: string;
@@ -42,6 +43,10 @@ interface Movie {
   runtime: number;
   production_countries: ProductionCountry[];
   original_language: string;
+  tagline: string; 
+  budget: number;
+  revenue: number;
+  status: string;
   credits: {
     cast: CastMember[];
     crew: CrewMember[];
@@ -165,8 +170,28 @@ export default function MovieDetail() {
   );
 
   return (
-    <>
-      <nav className="navbar navbar-expand-lg navbar-light bg-dark">
+    <div className="movie-detail-page">
+      {/* Backdrop Image */}
+      {movie && movie.backdrop_path && (
+        <div className="backdrop-wrapper">
+          <div 
+            className="backdrop-image"
+            style={{
+              backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7)), url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center 20%',
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              zIndex: -1
+            }}
+          />
+        </div>
+      )}
+
+      <nav className="navbar navbar-expand-lg navbar-dark">
         <div className="container-fluid">
           <Link href="/" style={{ textDecoration: "none" }}>
             <span
@@ -189,80 +214,71 @@ export default function MovieDetail() {
           </Link>
         </div>
       </nav>
+
       <div className="container mt-4">
-        <div className="row">
+        <div className="row movie-content">
           <div className="col-md-4">
-          <Image
-                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                alt={movie.title}
-                width={500}
-                height={750}
-                className="img-fluid"
-                priority={true} // Since this is the main image on the detail page
+            <Image
+              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+              alt={movie.title}
+              width={400}
+              height={650}
+              className="img-fluid rounded shadow"
+              priority={true}
             />
           </div>
           <div className="col-md-8">
-            <h1 className="ms-lg-2">{movie.title}</h1>
-            <br />
-            <div className="container">
-              <div className="row">
-                <div className="col-6">
-                  <strong>Release Date</strong>
-                  <br />
-                  {movie.release_date}
+            <div className="movie-details custom-dark bg-opacity-75 p-4 rounded">
+              <h1 className="text-white">{movie.title}</h1>
+              {movie.tagline && (
+                <p className="text-light fst-italic mb-3">{movie.tagline}</p>
+              )}
+              <div className="badge bg-warning me-2 mb-2">
+                  {movie.vote_average.toFixed(1)}
+                  <FontAwesomeIcon
+                    className="ms-1"
+                    icon={faStar}
+                  />
+              </div>
+              <div className="text-light">{movie.release_date} • {movie.runtime} min</div>
+        
+              <br />
+              <p className="text-light">{movie.overview}</p>
+              
+                <div className="mb-3">
+                <strong className="text-light">Genres:</strong>{" "}
+                <span className="text-light">{movie.genres.map((genre) => genre.name).join(", ")}</span>
                 </div>
-                <div className="col text-center">
-                  <strong>IMDB</strong>
-                  <br />
-                  <div className="ms-1">
-                    {movie.vote_average.toFixed(1)}
-                    <FontAwesomeIcon
-                      className="ms-1"
-                      icon={faStar}
-                      style={{ color: "#F7931A" }}
-                    />
-                  </div>
+
+                <div className="mb-3">
+                <strong className="text-light">Language:</strong>{" "}
+                <span className="text-light">{languageName}</span>
                 </div>
+              
+              <div className="mb-3">
+                <strong className="text-light">Production Countries:</strong>{" "}
+                <span className="text-light">{countries || "N/A"}</span>
+              </div>
+              
+              <div className="mb-3">
+                <strong className="text-light">Director:</strong>{" "}
+                <span className="text-light">{director ? director.name : "N/A"}</span>
+              </div>
+              
+              <div>
+                <strong className="text-light">Main Stars:</strong>{" "}
+                <span className="text-light">
+                  {mainStars.length > 0
+                    ? mainStars.map((star) => star.name).join(", ")
+                    : "N/A"}
+                </span>
               </div>
             </div>
-            <br />
-            <p className="ms-lg-2">{movie.overview}</p>
-            <div className="container">
-              <div className="row">
-                <div className="col-6">
-                  <strong>Genres:</strong>{" "}
-                  {movie.genres.map((genre) => genre.name).join(", ")}
-                </div>
-                <div className="col text-center">
-                  <strong>{movie.runtime} minutes</strong>
-                </div>
-              </div>
-            </div>
-            <br />
-            <div className="container">
-              <div className="row">
-                <div className="col-6">
-                  <strong>Production Countries:</strong> {countries || "N/A"}
-                </div>
-                <div className="col text-center">
-                  <strong>{languageName}</strong>
-                </div>
-              </div>
-            </div>
-            <br />
-            <p className="ms-lg-2">
-              <strong>Director:</strong> {director ? director.name : "N/A"}
-            </p>
-            <p className="ms-lg-2">
-              <strong>Main Stars:</strong>
-              {mainStars.length > 0
-                ? mainStars.map((star) => star.name).join(", ")
-                : "N/A"}
-            </p>
           </div>
         </div>
       </div>
+      
       <Footer />
-    </>
+    </div>
   );
 }
