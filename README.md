@@ -1,7 +1,6 @@
 # [Movies App](https://movies-app-next-js-pi.vercel.app/)
 A Next.js movies application that fetches data using the TMDB API. The app features client-side interactivity, server-side API routes for security. The app uses TypeScript for type safety and global CSS for styling.
-![IMG1](./screenshots/Screenshot%202025-03-05%20154921.jpg)
-![IMG2](./screenshots/Screenshot%202025-03-05%20155149.jpg)
+![IMG1](./public/Screenshot%202025-03-05%20154921.jpg)
 
 ## Table of Contents
 
